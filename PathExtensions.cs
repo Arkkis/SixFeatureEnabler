@@ -41,4 +41,68 @@ public static class PathExtensions
             return false;
         }
     }
+
+    public static void CreateProjectPathList(this List<string> projectList, string filePath)
+    {
+        var extension = Path.GetExtension(filePath);
+
+        switch (extension)
+        {
+            case ".sln":
+                foreach (var line in File.ReadAllLines(filePath))
+                {
+                    var trimLine = line.Trim();
+                    if (trimLine.StartsWith("Project"))
+                    {
+                        var splits = trimLine.Split(',');
+                        var projectFile = string.Empty;
+
+                        foreach (var split in splits)
+                        {
+                            if (split.Contains(".csproj"))
+                            {
+                                projectFile = split.Trim().Replace("\"", "");
+
+                                if (!Path.IsPathRooted(projectFile))
+                                {
+                                    projectFile = Path.Combine(Path.GetDirectoryName(filePath), projectFile);
+                                }
+                            }
+                        }
+
+                        if (!projectList.Contains(projectFile))
+                        {
+                            Console.WriteLine(projectFile);
+
+                            var projectPath = Path.GetDirectoryName(projectFile);
+
+                            if (projectPath is not null)
+                            {
+                                projectList.Add(projectPath);
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case ".csproj":
+                Console.WriteLine(filePath);
+
+                var path = Path.GetDirectoryName(filePath);
+
+                if (path == null)
+                {
+                    Console.WriteLine("Can't find path");
+                    Environment.Exit(-1);
+                }
+
+                projectList.Add(path);
+                break;
+
+            default:
+                Console.WriteLine("Wrong file type. Use sln or csproj.");
+                Environment.Exit(-1);
+                break;
+        }
+    }
 }

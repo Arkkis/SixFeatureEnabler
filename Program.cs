@@ -1,40 +1,17 @@
 ﻿args.Validate();
 
-var pathHelpers = new PathHelpers();
-var projectList = new List<string>();
 var linesRemovedCount = 0;
 var filesEditedCount = 0;
 
 Console.WriteLine("Projects found:");
 
-if (Path.GetExtension(args[0]) is ".sln")
-{
-    projectList = pathHelpers.CreateProjectPathList(args[0]);
-}
-else if (Path.GetExtension(args[0]) is ".csproj")
-{
-    Console.WriteLine(args[0]);
-
-    var path = Path.GetDirectoryName(args[0]);
-
-    if (path == null)
-    {
-        Console.WriteLine("Can't find path");
-        Environment.Exit(-1);
-    }
-
-    projectList.Add(path);
-}
-else
-{
-    Console.WriteLine("Wrong file type. Use sln or csproj.");
-    Environment.Exit(-1);
-}
-
-var classFileList = new List<string>();
+var projectList = new List<string>();
+projectList.CreateProjectPathList(args[0]);
 
 Console.WriteLine();
 Console.WriteLine("Files edited:");
+
+var classFileList = new List<string>();
 
 foreach (var path in projectList)
 {

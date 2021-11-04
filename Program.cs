@@ -1,15 +1,24 @@
 ﻿args.Validate();
 
-var linesRemovedCount = 0;
-var filesEditedCount = 0;
-
+Console.Clear();
 Console.WriteLine("Projects found:");
 
 var projectList = new List<string>();
 projectList.CreateProjectPathList(args[0]);
-
 Console.WriteLine();
-Console.WriteLine("Files edited:");
+
+Selection:
+Console.WriteLine("----------------------------------------");
+Console.WriteLine("-            Choose action             -");
+Console.WriteLine("- 1) Convert all usings to global      -");
+Console.WriteLine("- 2) Convert to file scoped namespaces -");
+Console.WriteLine("- 3) Do both                           -");
+Console.WriteLine("----------------------------------------");
+Console.WriteLine("- 4) Exit                              -");
+Console.WriteLine("----------------------------------------");
+
+Console.Write("Selection: ");
+var key = Console.ReadKey().Key;
 
 var classFileList = new List<string>();
 
@@ -24,84 +33,53 @@ foreach (var path in projectList)
 
     classFileList.ListFilesAndDirectoriesRecursively(path);
 
-    var addedUsings = new List<string>();
-
-    foreach (var classFile in classFileList)
+    switch (key)
     {
-        var classFileLines = File.ReadAllLines(classFile);
-
-        if (classFileLines.All(line => !line.Contains("namespace")))
-        {
-            continue;
-        }
-
-        var fileWasEdited = false;
-
-        foreach (var line in classFileLines)
-        {
-            var trimmedLine = line.Trim();
-
-            if (trimmedLine.StartsWith("using ") && !trimmedLine.Contains("="))
+        case ConsoleKey.D1:
+        case ConsoleKey.NumPad1:
             {
-                var newUsingLine = $"global {trimmedLine + Environment.NewLine}";
-
-                if (!addedUsings.Contains(newUsingLine))
-                {
-                    File.AppendAllText(usingFile, newUsingLine);
-                    addedUsings.Add(newUsingLine);
-                    fileWasEdited = true;
-                }
-            }
-        }
-
-        if (fileWasEdited)
-        {
-            Console.WriteLine(classFile);
-            filesEditedCount++;
-        }
-
-        var usingsToRemove = new List<string>();
-
-        foreach (var line in classFileLines)
-        {
-            if (line.Contains("namespace"))
-            {
+                var usingService = new UsingService();
+                usingService.RemoveUsings(classFileList, usingFile);
                 break;
             }
 
-            var trimmedLine = line.Trim();
-
-            if (trimmedLine.StartsWith("using ") && !trimmedLine.Contains("="))
+        case ConsoleKey.D2:
+        case ConsoleKey.NumPad2:
             {
-                linesRemovedCount++;
-                usingsToRemove.Add(line);
+                var namespaceService = new NamespaceService();
+                namespaceService.FileScopeNamespaces(classFileList);
+                break;
             }
-        }
 
-        var newFile = string.Empty;
-
-        foreach (var line in classFileLines)
-        {
-            if (!usingsToRemove.Contains(line))
+        case ConsoleKey.D3:
+        case ConsoleKey.NumPad3:
             {
-                newFile += line;
+                var usingService = new UsingService();
+                usingService.RemoveUsings(classFileList, usingFile);
 
-                if (line != classFileLines.Last())
-                {
-                    newFile += Environment.NewLine;
-                }
+                var namespaceService = new NamespaceService();
+                namespaceService.FileScopeNamespaces(classFileList);
+                break;
             }
-        }
 
-        File.WriteAllText(classFile, newFile.TrimStart(), Encoding.UTF8);
+        case ConsoleKey.D4:
+        case ConsoleKey.NumPad4:
+            {
+                Environment.Exit(0);
+                break;
+            }
+
+        default:
+            Console.Clear();
+            goto Selection;
     }
 
     classFileList.Clear();
 }
 
 Console.WriteLine();
-Console.WriteLine($"Edited {filesEditedCount} files");
-Console.WriteLine($"Removed {linesRemovedCount} lines");
+Console.WriteLine($"Edited {RuntimeVariables.FilesEditedCount} files");
+Console.WriteLine($"Removed {RuntimeVariables.LinesRemovedCount} lines");
 Console.WriteLine();
 Console.WriteLine("Press any key to exit");
 Console.ReadKey();

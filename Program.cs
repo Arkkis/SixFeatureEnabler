@@ -20,6 +20,7 @@ Console.WriteLine("----------------------------------------");
 Console.Write("Selection: ");
 var key = Console.ReadKey().Key;
 
+var noticeAboutCleanup = false;
 var classFileList = new List<string>();
 
 foreach (var path in projectList)
@@ -48,6 +49,7 @@ foreach (var path in projectList)
             {
                 var namespaceService = new NamespaceService();
                 namespaceService.FileScopeNamespaces(classFileList);
+                noticeAboutCleanup = true;
                 break;
             }
 
@@ -59,6 +61,7 @@ foreach (var path in projectList)
 
                 var namespaceService = new NamespaceService();
                 namespaceService.FileScopeNamespaces(classFileList);
+                noticeAboutCleanup = true;
                 break;
             }
 
@@ -75,6 +78,14 @@ foreach (var path in projectList)
     }
 
     classFileList.Clear();
+}
+
+if (noticeAboutCleanup)
+{
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine("To fix indentation in edited files, please run Code Cleanup");
+    Console.WriteLine();
 }
 
 Console.WriteLine();

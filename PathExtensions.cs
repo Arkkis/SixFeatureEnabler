@@ -1,4 +1,4 @@
-﻿namespace ToGlobalUsing;
+﻿namespace SixFeatureEnabler;
 
 public static class PathExtensions
 {

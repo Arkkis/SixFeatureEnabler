@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "ToGlobalUsing": {
+    "SixFeatureEnabler": {
       "commandName": "Project",
       "commandLineArgs": "\"D:\\Omat tiedostot\\Documents\\Visual Studio 2022\\Projects\\ToGlobalUsingKopio\\ToGlobalUsing.csproj\""
     }

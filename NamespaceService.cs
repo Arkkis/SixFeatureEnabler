@@ -6,7 +6,12 @@ public class NamespaceService
     {
         foreach (var classFile in classFileList)
         {
-            var fileLines = File.ReadAllLines(classFile);
+            string[] fileLines;
+
+            using (StreamReader sr = new StreamReader(classFile))
+            {
+                fileLines = sr.ReadToEnd().Split('\n');
+            }
 
             var namespaceFound = false;
             var namespaceIndex = 0;
@@ -23,8 +28,9 @@ public class NamespaceService
                 }
 
                 var line = fileLines[i];
+                var lineLastCharacterWithoutLinebreak = line.TrimEnd().LastOrDefault();
 
-                if (line.Contains("namespace ") && !line.EndsWith(';'))
+                if (line.Contains("namespace ") && lineLastCharacterWithoutLinebreak != ';')
                 {
                     namespaceIndex = i;
                     linesToRemoved.Add(i);
@@ -71,20 +77,24 @@ public class NamespaceService
 
             for (int i = 0; i < fileLines.Length; i++)
             {
+                var line = fileLines[i];
+
+                var hasNewLine = line.LastOrDefault() == '\r';
+
                 if (namespaceIndex == i)
                 {
                     RuntimeVariables.LinesRemovedCount += 3;
-                    newFile += fileLines[i] + ";" + Environment.NewLine + Environment.NewLine;
+                    newFile += line.TrimEnd() + ";";
                 }
 
                 if (!linesToRemoved.Contains(i))
                 {
-                    newFile += fileLines[i];
+                    newFile += line.TrimEnd();
+                }
 
-                    if (i != fileLines.Length - 1)
-                    {
-                        newFile += Environment.NewLine;
-                    }
+                if (i != fileLines.Length - 1 && i != fileLines.Length - 2 && hasNewLine)
+                {
+                    newFile += Environment.NewLine;
                 }
             }
 

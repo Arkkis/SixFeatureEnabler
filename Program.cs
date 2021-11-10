@@ -25,13 +25,6 @@ var classFileList = new List<string>();
 
 foreach (var path in projectList)
 {
-    var usingFile = Path.Combine(path, "Usings.cs");
-
-    if (!File.Exists(usingFile))
-    {
-        File.WriteAllText(usingFile, "", Encoding.UTF8);
-    }
-
     classFileList.ListFilesAndDirectoriesRecursively(path);
 
     switch (key)
@@ -39,6 +32,13 @@ foreach (var path in projectList)
         case ConsoleKey.D1:
         case ConsoleKey.NumPad1:
             {
+                var usingFile = Path.Combine(path, "Usings.cs");
+
+                if (!File.Exists(usingFile))
+                {
+                    File.WriteAllText(usingFile, "", Encoding.UTF8);
+                }
+
                 var usingService = new UsingService();
                 usingService.RemoveUsings(classFileList, usingFile);
                 break;
@@ -56,6 +56,13 @@ foreach (var path in projectList)
         case ConsoleKey.D3:
         case ConsoleKey.NumPad3:
             {
+                var usingFile = Path.Combine(path, "Usings.cs");
+
+                if (!File.Exists(usingFile))
+                {
+                    File.WriteAllText(usingFile, "", Encoding.UTF8);
+                }
+
                 var usingService = new UsingService();
                 usingService.RemoveUsings(classFileList, usingFile);
 

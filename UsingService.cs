@@ -8,16 +8,21 @@ public class UsingService
 
         foreach (var classFile in classFileList)
         {
-            var classFileLines = File.ReadAllLines(classFile);
+            string[] fileLines;
 
-            if (classFileLines.All(line => !line.Contains("namespace")))
+            using (StreamReader sr = new StreamReader(classFile))
+            {
+                fileLines = sr.ReadToEnd().Split('\n');
+            }
+
+            if (fileLines.All(line => !line.Contains("namespace")))
             {
                 continue;
             }
 
             var fileWasEdited = false;
 
-            foreach (var line in classFileLines)
+            foreach (var line in fileLines)
             {
                 var trimmedLine = line.Trim();
 
@@ -36,13 +41,13 @@ public class UsingService
 
             if (fileWasEdited)
             {
-                Console.WriteLine(classFile);
+                //Console.WriteLine(classFile);
                 RuntimeVariables.FilesEditedCount++;
             }
 
             var usingsToRemove = new List<string>();
 
-            foreach (var line in classFileLines)
+            foreach (var line in fileLines)
             {
                 if (line.Contains("namespace"))
                 {
@@ -60,13 +65,17 @@ public class UsingService
 
             var newFile = string.Empty;
 
-            foreach (var line in classFileLines)
+            for (int i = 0; i < fileLines.Length; i++)
             {
+                var line = fileLines[i];
+
+                var hasNewLine = line.LastOrDefault() == '\r';
+
                 if (!usingsToRemove.Contains(line))
                 {
-                    newFile += line;
+                    newFile += line.TrimEnd();
 
-                    if (line != classFileLines.Last())
+                    if (i != fileLines.Length - 1 && hasNewLine)
                     {
                         newFile += Environment.NewLine;
                     }

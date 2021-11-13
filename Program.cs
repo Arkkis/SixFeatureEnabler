@@ -4,25 +4,27 @@ Console.Clear();
 Console.WriteLine("Projects found:");
 
 var projectList = new List<string>();
-projectList.CreateProjectPathList(args[0]);
+var projectListWithFilenames = new List<string>();
 Console.WriteLine();
 
 Selection:
-Console.WriteLine("----------------------------------------");
-Console.WriteLine("-            Choose action             -");
-Console.WriteLine("- 1) Convert all usings to global      -");
-Console.WriteLine("- 2) Convert to file scoped namespaces -");
-Console.WriteLine("- 3) Do both                           -");
-Console.WriteLine("- 4) Enable .NET 6 + C# 10 for all proj-");
-Console.WriteLine("----------------------------------------");
-Console.WriteLine("- 5) Exit                              -");
-Console.WriteLine("----------------------------------------");
+Console.WriteLine("---------------------------------------------");
+Console.WriteLine("-              Choose action                -");
+Console.WriteLine("- 1) Convert all usings to global           -");
+Console.WriteLine("- 2) Convert to file scoped namespaces      -");
+Console.WriteLine("- 3) Enable .NET 6 + C# 10 for all projects -");
+Console.WriteLine("- 4) Do everything                          -");
+Console.WriteLine("---------------------------------------------");
+Console.WriteLine("- 5) Exit                                   -");
+Console.WriteLine("---------------------------------------------");
 
 Console.Write("Selection: ");
 var key = Console.ReadKey().Key;
 
 var noticeAboutCleanup = false;
 var classFileList = new List<string>();
+
+projectList.CreateProjectPathList(args[0]);
 
 foreach (var path in projectList)
 {
@@ -54,8 +56,8 @@ foreach (var path in projectList)
                 break;
             }
 
-        case ConsoleKey.D3:
-        case ConsoleKey.NumPad3:
+        case ConsoleKey.D4:
+        case ConsoleKey.NumPad4:
             {
                 var usingFile = Path.Combine(path, "Usings.cs");
 
@@ -73,13 +75,6 @@ foreach (var path in projectList)
                 break;
             }
 
-        case ConsoleKey.D4:
-        case ConsoleKey.NumPad4:
-            {
-                Environment.Exit(0);
-                break;
-            }
-
         case ConsoleKey.D5:
         case ConsoleKey.NumPad5:
             {
@@ -93,6 +88,13 @@ foreach (var path in projectList)
     }
 
     classFileList.Clear();
+}
+
+if (key == ConsoleKey.D3 || key == ConsoleKey.NumPad3 || key == ConsoleKey.D4 || key == ConsoleKey.NumPad4)
+{
+    projectListWithFilenames.CreateProjectPathList(args[0], withFilenames: true);
+    var versionUpgradeService = new VersionUpgradeService();
+    versionUpgradeService.UpgradeAllProjects(projectListWithFilenames);
 }
 
 if (noticeAboutCleanup)

@@ -42,8 +42,10 @@ public static class PathExtensions
         }
     }
 
-    public static void CreateProjectPathList(this List<string> projectList, string filePath)
+    public static void CreateProjectPathList(this List<string> projectList, string filePath, bool withFilenames = false)
     {
+        projectList.Clear();
+
         var extension = Path.GetExtension(filePath);
 
         switch (extension)
@@ -74,7 +76,16 @@ public static class PathExtensions
                         {
                             Console.WriteLine(projectFile);
 
-                            var projectPath = Path.GetDirectoryName(projectFile);
+                            string projectPath;
+
+                            if (!withFilenames)
+                            {
+                                projectPath = Path.GetDirectoryName(projectFile);
+                            }
+                            else
+                            {
+                                projectPath = projectFile;
+                            }
 
                             if (projectPath is not null)
                             {

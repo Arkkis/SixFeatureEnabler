@@ -23,6 +23,7 @@ var key = Console.ReadKey().Key;
 
 var noticeAboutCleanup = false;
 var classFileList = new List<string>();
+var upgradeVersions = false;
 
 projectList.CreateProjectPathList(args[0]);
 
@@ -56,6 +57,13 @@ foreach (var path in projectList)
                 break;
             }
 
+        case ConsoleKey.D3:
+        case ConsoleKey.NumPad3:
+            {
+                upgradeVersions = true;
+                break;
+            }
+
         case ConsoleKey.D4:
         case ConsoleKey.NumPad4:
             {
@@ -72,6 +80,7 @@ foreach (var path in projectList)
                 var namespaceService = new NamespaceService();
                 namespaceService.FileScopeNamespaces(classFileList);
                 noticeAboutCleanup = true;
+                upgradeVersions = true;
                 break;
             }
 
@@ -90,7 +99,7 @@ foreach (var path in projectList)
     classFileList.Clear();
 }
 
-if (key == ConsoleKey.D3 || key == ConsoleKey.NumPad3 || key == ConsoleKey.D4 || key == ConsoleKey.NumPad4)
+if (upgradeVersions)
 {
     projectListWithFilenames.CreateProjectPathList(args[0], withFilenames: true);
     var versionUpgradeService = new VersionUpgradeService();

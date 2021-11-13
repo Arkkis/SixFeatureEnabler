@@ -72,7 +72,7 @@ public static class PathExtensions
                             }
                         }
 
-                        if (!projectList.Contains(projectFile))
+                        if (!projectList.Contains(projectFile) && File.Exists(projectFile))
                         {
                             Console.WriteLine(projectFile);
 

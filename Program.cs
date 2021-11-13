@@ -13,8 +13,9 @@ Console.WriteLine("-            Choose action             -");
 Console.WriteLine("- 1) Convert all usings to global      -");
 Console.WriteLine("- 2) Convert to file scoped namespaces -");
 Console.WriteLine("- 3) Do both                           -");
+Console.WriteLine("- 4) Enable .NET 6 + C# 10 for all proj-");
 Console.WriteLine("----------------------------------------");
-Console.WriteLine("- 4) Exit                              -");
+Console.WriteLine("- 5) Exit                              -");
 Console.WriteLine("----------------------------------------");
 
 Console.Write("Selection: ");
@@ -67,6 +68,13 @@ foreach (var path in projectList)
 
         case ConsoleKey.D4:
         case ConsoleKey.NumPad4:
+            {
+                Environment.Exit(0);
+                break;
+            }
+
+        case ConsoleKey.D5:
+        case ConsoleKey.NumPad5:
             {
                 Environment.Exit(0);
                 break;

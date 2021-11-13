@@ -43,16 +43,14 @@ foreach (var path in projectList)
                     File.WriteAllText(usingFile, "", Encoding.UTF8);
                 }
 
-                var usingService = new UsingService();
-                usingService.RemoveUsings(classFileList, usingFile);
+                UsingService.RemoveUsings(classFileList, usingFile);
                 break;
             }
 
         case ConsoleKey.D2:
         case ConsoleKey.NumPad2:
             {
-                var namespaceService = new NamespaceService();
-                namespaceService.FileScopeNamespaces(classFileList);
+                NamespaceService.FileScopeNamespaces(classFileList);
                 noticeAboutCleanup = true;
                 break;
             }
@@ -74,11 +72,9 @@ foreach (var path in projectList)
                     File.WriteAllText(usingFile, "", Encoding.UTF8);
                 }
 
-                var usingService = new UsingService();
-                usingService.RemoveUsings(classFileList, usingFile);
+                UsingService.RemoveUsings(classFileList, usingFile);
+                NamespaceService.FileScopeNamespaces(classFileList);
 
-                var namespaceService = new NamespaceService();
-                namespaceService.FileScopeNamespaces(classFileList);
                 noticeAboutCleanup = true;
                 upgradeVersions = true;
                 break;
@@ -102,8 +98,7 @@ foreach (var path in projectList)
 if (upgradeVersions)
 {
     projectListWithFilenames.CreateProjectPathList(args[0], withFilenames: true);
-    var versionUpgradeService = new VersionUpgradeService();
-    versionUpgradeService.UpgradeAllProjects(projectListWithFilenames);
+    VersionUpgradeService.UpgradeAllProjects(projectListWithFilenames);
 }
 
 if (noticeAboutCleanup)

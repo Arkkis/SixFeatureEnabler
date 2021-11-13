@@ -2,7 +2,7 @@
 
 public class UsingService
 {
-    public void RemoveUsings(List<string> classFileList, string usingFile)
+    public static void RemoveUsings(List<string> classFileList, string usingFile)
     {
         var addedUsings = new List<string>();
 
@@ -10,7 +10,7 @@ public class UsingService
         {
             string[] fileLines;
 
-            using (StreamReader sr = new StreamReader(classFile))
+            using (StreamReader sr = new(classFile))
             {
                 fileLines = sr.ReadToEnd().Split('\n');
             }

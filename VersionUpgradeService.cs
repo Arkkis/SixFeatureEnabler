@@ -1,16 +1,14 @@
-﻿using System.IO;
-
-namespace SixFeatureEnabler;
+﻿namespace SixFeatureEnabler;
 
 public class VersionUpgradeService
 {
-    public void UpgradeAllProjects(List<string> projectFileList)
+    public static void UpgradeAllProjects(List<string> projectFileList)
     {
         foreach (var projectFile in projectFileList)
         {
             string[] fileLines;
 
-            using (StreamReader sr = new StreamReader(projectFile))
+            using (StreamReader sr = new(projectFile))
             {
                 fileLines = sr.ReadToEnd().Split('\n');
             }

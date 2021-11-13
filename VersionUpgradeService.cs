@@ -23,6 +23,7 @@ public class VersionUpgradeService
             }
 
             var newFile = string.Empty;
+            var editedFile = false;
 
             for (int i = 0; i < fileLines.Length; i++)
             {
@@ -34,6 +35,7 @@ public class VersionUpgradeService
                     if (!line.ToLower().Contains("<TargetFramework>net6.0</TargetFramework>".ToLower()))
                     {
                         newFile += "<TargetFramework>net6.0</TargetFramework>".TrimEnd();
+                        editedFile = true;
                     }
                     else
                     {
@@ -43,6 +45,7 @@ public class VersionUpgradeService
                     if (!langVersionFound)
                     {
                         newFile += Environment.NewLine + "<LangVersion>10</LangVersion>".TrimEnd();
+                        editedFile = true;
                     }
                 }
                 else if (langVersionFound && line.ToLower().Contains("<LangVersion>".ToLower()))
@@ -50,6 +53,7 @@ public class VersionUpgradeService
                     if (!line.ToLower().Contains("<LangVersion>10</LangVersion>".ToLower()))
                     {
                         newFile += "<LangVersion>10</LangVersion>".TrimEnd();
+                        editedFile = true;
                     }
                     else
                     {
@@ -65,6 +69,11 @@ public class VersionUpgradeService
                 {
                     newFile += Environment.NewLine;
                 }
+            }
+
+            if (editedFile)
+            {
+                RuntimeVariables.FilesEditedCount++;
             }
 
             File.WriteAllText(projectFile, newFile.TrimStart(), Encoding.UTF8);

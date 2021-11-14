@@ -28,12 +28,18 @@ public class VersionUpgradeService
             {
                 var line = fileLines[i];
                 var hasNewLine = line.LastOrDefault() == '\r';
+                var indent = string.Empty;
+
+                if (line.Contains("<"))
+                {
+                    indent = line.Split('<')[0];
+                }
 
                 if (line.ToLower().Contains("<TargetFramework>".ToLower()))
                 {
                     if (!line.ToLower().Contains("<TargetFramework>net6.0</TargetFramework>".ToLower()))
                     {
-                        newFile += "<TargetFramework>net6.0</TargetFramework>".TrimEnd();
+                        newFile += indent + "<TargetFramework>net6.0</TargetFramework>".TrimEnd();
                     }
                     else
                     {
@@ -42,14 +48,14 @@ public class VersionUpgradeService
 
                     if (!langVersionFound)
                     {
-                        newFile += Environment.NewLine + "<LangVersion>10</LangVersion>".TrimEnd();
+                        newFile += Environment.NewLine + indent + "<LangVersion>10</LangVersion>".TrimEnd();
                     }
                 }
                 else if (langVersionFound && line.ToLower().Contains("<LangVersion>".ToLower()))
                 {
                     if (!line.ToLower().Contains("<LangVersion>10</LangVersion>".ToLower()))
                     {
-                        newFile += "<LangVersion>10</LangVersion>".TrimEnd();
+                        newFile += indent + "<LangVersion>10</LangVersion>".TrimEnd();
                     }
                     else
                     {

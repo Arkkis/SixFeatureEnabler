@@ -2,13 +2,13 @@
 
 public class NamespaceService
 {
-    public void FileScopeNamespaces(List<string> classFileList)
+    public static void FileScopeNamespaces(List<string> classFileList)
     {
         foreach (var classFile in classFileList)
         {
             string[] fileLines;
 
-            using (StreamReader sr = new StreamReader(classFile))
+            using (StreamReader sr = new(classFile))
             {
                 fileLines = sr.ReadToEnd().Split('\n');
             }

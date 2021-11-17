@@ -6,13 +6,14 @@ public static class ArgumentValidation
     {
         if (args.Length <= 0)
         {
-            Console.WriteLine("Arguments missing");
+            Console.WriteLine("Usage: SixFeatureEnabler.exe \"FullPathToSlnOrCsproj\"");
             Environment.Exit(-1);
         }
 
         if (!File.Exists(args[0]))
         {
             Console.WriteLine("File not found");
+            Console.WriteLine("Usage: SixFeatureEnabler.exe \"FullPathToSlnOrCsproj\"");
             Environment.Exit(-1);
         }
     }
